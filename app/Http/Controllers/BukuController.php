@@ -74,7 +74,17 @@ class BukuController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $client = new Client();
+        $url = "http://localhost:8000/api/buku/$id";
+        $response = $client->request('GET', $url);
+        $content = $response->getBody()->getContents();
+        $contentarray = json_decode($content, true);
+        if ($contentarray['status'] != true) {
+            $error = $contentarray['message'];
+            return redirect()->to('buku')->withErrors($error);
+        }
+        $data = $contentarray['data'];
+        return view('buku.index', compact('data'));
     }
 
     /**
@@ -82,7 +92,30 @@ class BukuController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $judul = $request->judul;
+        $pengarang = $request->pengarang;
+        $tanggal_publikasi = $request->tanggal_publikasi;
+
+        $parameter = [
+            'judul' => $judul,
+            'pengarang' => $pengarang,
+            'tanggal_publikasi' => $tanggal_publikasi
+        ];
+
+        $client = new Client();
+        $url = "http://localhost:8000/api/buku/$id";
+        $response = $client->request('PUT', $url, [
+            'headers' => ['Content-Type' => 'application/json'],
+            'body' => json_encode($parameter)
+        ]);
+        $content = $response->getBody()->getContents();
+        $contentarray = json_decode($content, true);
+        if ($contentarray['status'] != true) {
+            $error = $contentarray['data'];
+            return redirect()->to('buku')->withErrors($error)->withInput();
+        } else {
+            return redirect()->to('buku')->with('success', 'Data berhasil diubah');
+        }
     }
 
     /**
