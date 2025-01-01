@@ -87,7 +87,15 @@
                                 <td>{{ date('d/m/Y', strtotime($item['tanggal_publikasi'])) }}</td>
                                 <td>
                                     <a href="{{ url('buku/' . $item['id']) }}" class="btn btn-warning btn-sm">Edit</a>
-                                    <a href="" class="btn btn-danger btn-sm">Del</a>
+                                    <form action="{{ url('buku/' . $item['id']) }}" method="POST"
+                                        onsubmit="return confirm('Apakah yakin akan melakukan penghapusan data')"
+                                        class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" name="submit"
+                                            class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+
                                 </td>
                             </tr>
                         @endforeach

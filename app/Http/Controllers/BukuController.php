@@ -123,6 +123,16 @@ class BukuController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $client = new Client();
+        $url = "http://localhost:8000/api/buku/$id";
+        $response = $client->request('DELETE', $url);
+        $content = $response->getBody()->getContents();
+        $contentarray = json_decode($content, true);
+        if ($contentarray['status'] != true) {
+            $error = $contentarray['data'];
+            return redirect()->to('buku')->withErrors($error)->withInput();
+        } else {
+            return redirect()->to('buku')->with('success', 'Data berhasil dihapus');
+        }
     }
 }
