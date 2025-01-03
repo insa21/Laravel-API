@@ -11,11 +11,14 @@ class BukuController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $current_url = url()->current();
         $client = new Client();
         $url = static::API_URL;
+        if($request->input('page') != ''){
+            $url .= '?page='.$request->input('page');
+        }
         $response = $client->request('GET', $url);
         $content = $response->getBody()->getContents();
         $contentarray = json_decode($content, true);

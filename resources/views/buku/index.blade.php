@@ -79,9 +79,10 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php $i = $data['from']; ?>
                         @foreach ($data['data'] as $item)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $i }}</td>
                                 <td>{{ $item['judul'] }}</td>
                                 <td>{{ $item['pengarang'] }}</td>
                                 <td>{{ date('d/m/Y', strtotime($item['tanggal_publikasi'])) }}</td>
@@ -98,6 +99,7 @@
 
                                 </td>
                             </tr>
+                            <?php $i++; ?>
                         @endforeach
                     </tbody>
                 </table>
