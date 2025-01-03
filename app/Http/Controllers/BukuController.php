@@ -7,17 +7,22 @@ use Illuminate\Http\Request;
 
 class BukuController extends Controller
 {
+    const  API_URL = "http://localhost:8000/api/buku";
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $current_url = url()->current();
         $client = new Client();
-        $url = "http://localhost:8000/api/buku";
+        $url = static::API_URL;
         $response = $client->request('GET', $url);
         $content = $response->getBody()->getContents();
         $contentarray = json_decode($content, true);
         $data = $contentarray['data'];
+        foreach ($data['links'] as $key => $value) {
+            $data['links'][$key]['url2'] = str_replace(static::API_URL, $current_url, $value['url']);
+        }
         return view('buku.index', compact('data'));
     }
 
